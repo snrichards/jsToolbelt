@@ -4,7 +4,11 @@
   "description": "Javascript utility for the browser",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "webpack --mode=development",
+    "build:min": "webpack --output-filename jsToolbelt.min.js -p",
+    "prettify": "prettier --write ./src/**/*.js",
+    "lint": "eslint --fix ./src",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -20,7 +24,7 @@
     "@babel/core": "^7.0.0-beta.42",
     "@babel/preset-env": "^7.0.0-beta.42",
     "@babel/preset-stage-2": "^7.0.0-beta.42",
-    "babel-core": "^6.26.0",
+    "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^8.2.2",
     "babel-loader": "^7.1.4",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.0",
@@ -35,5 +39,35 @@
     "prettier": "^1.11.1",
     "webpack": "^4.4.1",
     "webpack-cli": "^2.0.13"
+  },
+  "jest": {
+    "bail": true,
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/*/**/index.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 95,
+        "functions": 95,
+        "lines": 95,
+        "statements": 95
+      }
+    },
+    "testMatch": [
+      "**/test.js"
+    ]
+  },
+  "lint-staged": {
+    "src/**/*.js": [
+      "npm run prettify",
+      "npm run lint",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && npm test"
+    }
   }
 }
